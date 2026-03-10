@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المدار | نختصر الخبر.. لنرصد لك العالم</title>
+<meta name="description" content="المدار نيوز - اخبار عاجلة ومتابعة مستمرة لاخر المستجدات">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#b8001a;--red2:#d4001e;--red3:#ff2040;
+  --dark:#0a0a0a;--dark2:#121212;--dark3:#1a1a1a;--dark4:#202020;
+  --border:#242424;--border2:#2e2e2e;
+  --text:#f0f0f0;--text2:#c8c8c8;--muted:#666;--muted2:#888;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Tajawal',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ── TICKER ── */
+.ticker-bar{background:var(--red);height:36px;display:flex;align-items:center;overflow:hidden;position:relative;z-index:300}
+.ticker-tag{background:#000;color:var(--red3);height:100%;display:flex;align-items:center;padding:0 22px;font-size:11px;font-weight:900;letter-spacing:2px;white-space:nowrap;border-left:2px solid var(--red3);flex-shrink:0}
+.ticker-wrap{overflow:hidden;flex:1;cursor:pointer}
+.ticker-track{display:flex;white-space:nowrap;animation:scroll 50s linear infinite}
+.ticker-track:hover{animation-play-state:paused}
+.ti{font-size:12px;font-weight:700;color:#fff;padding:0 32px}
+.ti::before{content:'|';margin-left:16px;opacity:0.3}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── HEADER ── */
+header{background:#000;border-bottom:3px solid var(--red);position:sticky;top:0;z-index:200}
+.hdr{max-width:1300px;margin:0 auto;padding:0 28px;height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:13px;flex-shrink:0}
+.brand-logo{width:46px;height:46px;background:var(--red);border-radius:7px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;gap:3px;position:relative;overflow:hidden;flex-shrink:0}
+.brand-logo::after{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(rgba(255,255,255,0.12),transparent)}
+.bl{width:4px;background:#fff;border-radius:2px 2px 0 0}
+.brand-info{line-height:1}
+.brand-name{font-family:'Cairo',sans-serif;font-size:23px;font-weight:900;color:#fff;letter-spacing:-0.5px}
+.brand-name b{color:var(--red3)}
+.brand-tag{font-size:10px;color:var(--muted);font-weight:400;margin-top:3px}
+.hdr-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.live-pill{display:flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-size:11px;font-weight:900;padding:6px 13px;border-radius:3px;letter-spacing:1px}
+.ld{width:7px;height:7px;background:#fff;border-radius:50%;animation:blink 1s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.15}}
+.hdr-clock{font-size:13px;color:var(--muted);font-weight:500;white-space:nowrap}
+.hdr-date{font-size:11px;color:var(--muted);white-space:nowrap}
+.load-bar{height:2px;background:var(--dark2);overflow:hidden}
+.load-fill{height:100%;background:var(--red);width:0%;transition:width 0.5s ease}
+
+/* ── BREAKING NOTIFICATION ── */
+.break-notif{
+  position:fixed;top:110px;left:24px;
+  background:var(--red);
+  color:#fff;
+  border-radius:6px;
+  padding:14px 18px;
+  max-width:320px;
+  z-index:999;
+  box-shadow:0 8px 32px rgba(184,0,26,0.5);
+  transform:translateX(-400px);
+  transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  cursor:pointer;
+}
+.break-notif.show{transform:translateX(0)}
+.bn-tag{font-size:10px;font-weight:900;letter-spacing:1.5px;opacity:0.8;margin-bottom:5px}
+.bn-title{font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;line-height:1.5}
+.bn-src{font-size:11px;opacity:0.7;margin-top:6px}
+.bn-close{position:absolute;top:8px;left:10px;font-size:16px;opacity:0.6;cursor:pointer;line-height:1}
+.bn-close:hover{opacity:1}
+
+/* ── PAGE ── */
+.page{max-width:1300px;margin:0 auto;padding:28px 28px;display:grid;grid-template-columns:1fr 290px;gap:28px}
+
+/* ── HERO ── */
+.hero-wrap{grid-column:1/-1;display:grid;grid-template-columns:1.9fr 1fr;gap:3px;background:var(--border);border-radius:6px;overflow:hidden;min-height:450px;margin-bottom:6px}
+.hero-main{position:relative;overflow:hidden;cursor:pointer;background:#150003}
+.hero-img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.55;transition:opacity 0.5s,transform 8s ease}
+.hero-main:hover .hero-img{transform:scale(1.03)}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.98) 0%,rgba(0,0,0,0.55) 45%,rgba(0,0,0,0.1) 100%);z-index:1}
+.hero-body{position:absolute;bottom:0;left:0;right:0;padding:30px 26px;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--red);color:#fff;font-size:10px;font-weight:900;padding:4px 11px;border-radius:2px;margin-bottom:11px;letter-spacing:1px}
+.hb-dot{width:6px;height:6px;background:#fff;border-radius:50%;animation:blink 1s infinite;flex-shrink:0}
+.hero-title{font-family:'Cairo',sans-serif;font-size:25px;font-weight:900;line-height:1.5;color:#fff;margin-bottom:10px}
+.hero-desc{font-size:13px;color:rgba(255,255,255,0.58);line-height:1.75;margin-bottom:14px}
+.hero-footer{display:flex;align-items:center;gap:14px;font-size:11px;color:rgba(255,255,255,0.38)}
+.hero-src{color:var(--red3);font-weight:700}
+.hero-new-tag{background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px;font-size:10px}
+
+.hero-side{display:flex;flex-direction:column;gap:3px}
+.hsc{flex:1;background:var(--dark2);position:relative;overflow:hidden;cursor:pointer;transition:0.2s;min-height:130px;border-right:2px solid transparent}
+.hsc:hover{background:var(--dark3);border-right-color:var(--red)}
+.hsc-img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0.38;transition:opacity 0.3s}
+.hsc:hover .hsc-img{opacity:0.52}
+.hsc-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.2) 100%)}
+.hsc-body{position:relative;z-index:2;padding:14px 16px;height:100%;display:flex;flex-direction:column;justify-content:flex-end}
+.hsc-badge{font-size:9px;font-weight:900;color:var(--red3);letter-spacing:1px;margin-bottom:5px}
+.hsc-title{font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;line-height:1.5;color:#fff}
+.hsc-meta{font-size:10px;color:rgba(255,255,255,0.35);margin-top:5px}
+.new-badge{display:inline-block;background:var(--red);color:#fff;font-size:9px;font-weight:900;padding:1px 6px;border-radius:2px;margin-right:5px;animation:pulse-badge 2s infinite}
+@keyframes pulse-badge{0%,100%{opacity:1}50%{opacity:0.7}}
+
+/* ── SECTION HDR ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--border)}
+.sec-title{font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;display:flex;align-items:center;gap:9px}
+.sec-title::before{content:'';width:4px;height:18px;background:var(--red);border-radius:2px;display:block}
+.sec-count{font-size:12px;color:var(--muted);background:var(--dark3);padding:2px 9px;border-radius:10px;font-weight:600}
+.upd-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);color:var(--muted);padding:6px 14px;border-radius:4px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:0.2s}
+.upd-btn:hover{border-color:var(--red);color:var(--red3)}
+.upd-btn.spin svg{animation:rot 0.9s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* ── NEWS GRID ── */
+.ngrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ncard{background:var(--dark2);border:1px solid var(--border);border-radius:6px;overflow:hidden;cursor:pointer;transition:all 0.22s;display:flex;flex-direction:column;animation:rise 0.4s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.ncard:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:0 10px 36px rgba(0,0,0,0.6)}
+.ncard.is-new{border-color:rgba(184,0,26,0.4);box-shadow:0 0 0 1px rgba(184,0,26,0.15)}
+.ncard-thumb{width:100%;height:185px;overflow:hidden;position:relative;background:var(--dark3);flex-shrink:0}
+.ncard-img{width:100%;height:100%;object-fit:cover;transition:transform 0.45s ease}
+.ncard:hover .ncard-img{transform:scale(1.05)}
+.ncard-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--dark3),var(--dark4));position:relative;overflow:hidden}
+.ncard-ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 12px,rgba(184,0,26,0.03) 12px,rgba(184,0,26,0.03) 24px)}
+.ncard-ph span{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;position:relative}
+.cat-tag{position:absolute;top:10px;right:10px;background:var(--red);color:#fff;font-size:9px;font-weight:900;padding:3px 9px;border-radius:2px;letter-spacing:0.5px;z-index:2}
+.cat-tag.new-tag{background:#000;border:1px solid var(--red);color:var(--red3);animation:pulse-badge 1.5s infinite}
+.ncard-body{padding:14px;flex:1;display:flex;flex-direction:column;gap:7px}
+.ncard-meta{display:flex;align-items:center;gap:7px}
+.ncard-src{font-size:10px;font-weight:800;color:var(--red3);background:rgba(184,0,26,0.09);padding:2px 8px;border-radius:2px}
+.ncard-time{font-size:10px;color:var(--muted);margin-right:auto}
+.ncard-title{font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;line-height:1.6;color:var(--text);flex:1;transition:color 0.2s}
+.ncard:hover .ncard-title{color:#fff}
+.ncard-desc{font-size:12px;color:var(--muted2);line-height:1.65}
+.ncard-foot{padding:9px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ncard-cat{font-size:10px;color:var(--muted);background:var(--dark3);padding:2px 8px;border-radius:2px;font-weight:700}
+.read-more{font-size:11px;font-weight:700;color:var(--red3);transition:0.2s}
+.ncard:hover .read-more{color:#fff}
+
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;gap:18px}
+.wgt{background:var(--dark2);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.wgt-hdr{padding:11px 16px;background:var(--dark3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.wgt-bar{width:16px;height:2px;background:var(--red);border-radius:1px;flex-shrink:0}
+.wgt-title{font-size:11px;font-weight:800;color:var(--muted2);text-transform:uppercase;letter-spacing:1.5px}
+.wgt-body{padding:14px 16px}
+
+/* ABOUT */
+.about-box{text-align:center;padding:18px 14px}
+.about-logo{width:54px;height:54px;background:var(--red);border-radius:10px;margin:0 auto 13px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;gap:3px;position:relative;overflow:hidden}
+.about-logo::after{content:'';position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(rgba(255,255,255,0.13),transparent)}
+.ab{width:4px;background:#fff;border-radius:2px 2px 0 0}
+.about-name{font-size:17px;font-weight:900;margin-bottom:3px}
+.about-handle{font-size:12px;color:var(--red3);font-weight:700;margin-bottom:8px}
+.about-bio{font-size:12px;color:var(--muted2);line-height:1.7;margin-bottom:15px}
+.follow-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:var(--red);color:#fff;border:none;border-radius:4px;padding:10px;font-family:'Tajawal',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:0.2s;text-decoration:none}
+.follow-btn:hover{background:var(--red2);transform:scale(1.01)}
+
+/* LIVE FEED */
+.live-feed-list{display:flex;flex-direction:column;gap:0;max-height:380px;overflow-y:auto}
+.live-feed-list::-webkit-scrollbar{width:3px}
+.live-feed-list::-webkit-scrollbar-thumb{background:var(--border2)}
+.lf-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:0.15s;align-items:flex-start}
+.lf-item:last-child{border-bottom:none}
+.lf-item:hover{padding-right:5px}
+.lf-item.is-new .lf-title{color:var(--red3)}
+.lf-dot{width:7px;height:7px;background:var(--muted);border-radius:50%;flex-shrink:0;margin-top:5px}
+.lf-dot.hot{background:var(--red);animation:blink 1.2s infinite}
+.lf-body{flex:1}
+.lf-title{font-size:12px;font-weight:700;line-height:1.5;color:var(--text);transition:color 0.2s}
+.lf-meta{font-size:10px;color:var(--muted);margin-top:3px}
+
+/* TRENDING */
+.tr-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:0.15s}
+.tr-item:last-child{border-bottom:none}
+.tr-item:hover{padding-right:5px}
+.tr-num{font-family:'Cairo',sans-serif;font-size:20px;font-weight:900;color:var(--border2);min-width:24px;line-height:1}
+.tr-num.h{color:var(--red)}
+.tr-text{font-size:12px;font-weight:700;flex:1;line-height:1.4}
+.tr-count{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat-box{background:var(--dark3);border-radius:5px;padding:10px;text-align:center}
+.stat-n{font-family:'Cairo',sans-serif;font-size:24px;font-weight:900;color:var(--red3);line-height:1}
+.stat-l{font-size:10px;color:var(--muted);margin-top:3px}
+
+/* ADD NEWS */
+.add-hdr{background:var(--red);padding:11px 16px;font-size:11px;font-weight:800;color:#fff;letter-spacing:0.5px}
+.add-body{padding:14px 16px}
+.ai{width:100%;background:var(--dark3);border:1px solid var(--border2);border-radius:4px;padding:9px 11px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:13px;outline:none;margin-bottom:8px;transition:border-color 0.2s}
+.ai:focus{border-color:var(--red)}
+.ai::placeholder{color:var(--muted)}
+.ai-row{display:flex;gap:6px}
+.ai-sel{flex:1;background:var(--dark3);border:1px solid var(--border2);border-radius:4px;padding:8px 10px;color:var(--text);font-family:'Tajawal',sans-serif;font-size:12px;outline:none;cursor:pointer}
+.ai-sel:focus{border-color:var(--red)}
+.ai-sub{background:var(--red);color:#fff;border:none;border-radius:4px;padding:8px 14px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;transition:0.2s}
+.ai-sub:hover{background:var(--red2)}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.modal-bg.open{display:flex}
+.modal-box{background:var(--dark2);border:1px solid var(--border2);border-radius:8px;width:720px;max-width:94vw;max-height:92vh;overflow-y:auto;animation:rise 0.28s ease}
+.modal-box::-webkit-scrollbar{width:4px}
+.modal-img-wrap{width:100%;height:320px;overflow:hidden;background:var(--dark3);position:relative}
+.modal-img{width:100%;height:100%;object-fit:cover}
+.modal-img-overlay{position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,var(--dark2),transparent)}
+.m-hdr{padding:20px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.m-badge{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-size:10px;font-weight:900;padding:4px 11px;border-radius:2px;margin-bottom:10px;letter-spacing:1px}
+.m-title{font-family:'Cairo',sans-serif;font-size:21px;font-weight:900;line-height:1.5}
+.m-close{background:var(--dark3);border:1px solid var(--border2);color:var(--muted2);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:0.2s;line-height:1}
+.m-close:hover{border-color:var(--red);color:#fff}
+.m-body{padding:20px 24px 28px}
+.m-meta{display:flex;align-items:center;gap:14px;font-size:12px;color:var(--muted);margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.m-src{color:var(--red3);font-weight:700;font-size:13px}
+.m-desc{font-size:15px;line-height:1.95;color:var(--text2);margin-bottom:22px}
+.m-link{display:inline-flex;align-items:center;gap:7px;background:var(--dark3);border:1px solid var(--border2);color:var(--text2);padding:9px 18px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;transition:0.2s}
+.m-link:hover{border-color:var(--red);color:#fff}
+.m-share{display:flex;gap:8px;margin-top:14px}
+.m-share-btn{flex:1;padding:9px;background:var(--dark3);border:1px solid var(--border2);color:var(--muted2);border-radius:4px;font-family:'Tajawal',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:0.2s;text-align:center}
+.m-share-btn:hover{border-color:var(--red3);color:var(--red3)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:#fff;color:#000;padding:11px 24px;border-radius:5px;font-weight:800;font-size:13px;z-index:9999;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);white-space:nowrap;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,0.4)}
+.toast.err{background:var(--red);color:#fff}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* SKELETON */
+.sk{background:linear-gradient(90deg,var(--dark2) 25%,var(--dark3) 50%,var(--dark2) 75%);background-size:200% 100%;animation:shim 1.4s infinite;border-radius:4px}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* FOOTER */
+footer{background:#000;border-top:3px solid var(--red);padding:30px 28px 20px;margin-top:48px}
+.foot-in{max-width:1300px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
+.foot-brand{font-family:'Cairo',sans-serif;font-size:20px;font-weight:900}
+.foot-brand b{color:var(--red3)}
+.foot-copy{font-size:11px;color:var(--muted)}
+.foot-x{display:flex;align-items:center;gap:8px;background:var(--dark2);border:1px solid var(--border2);color:var(--muted2);padding:7px 14px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;transition:0.2s;text-decoration:none}
+.foot-x:hover{border-color:var(--red);color:#fff}
+
+@media(max-width:1000px){
+  .hero-wrap{grid-template-columns:1fr}.hero-side{display:none}
+  .page{grid-template-columns:1fr}.sidebar{display:none}
+  .ngrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-tag">عاجل</div>
+  <div class="ticker-wrap"><div class="ticker-track" id="tickerTrack"></div></div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="hdr">
+    <div class="brand">
+      <div class="brand-logo">
+        <div class="bl" style="height:9px"></div>
+        <div class="bl" style="height:17px"></div>
+        <div class="bl" style="height:25px"></div>
+        <div class="bl" style="height:17px"></div>
+        <div class="bl" style="height:9px"></div>
+      </div>
+      <div class="brand-info">
+        <div class="brand-name">المدار <b>|</b> News</div>
+        <div class="brand-tag">نختصر الخبر.. لنرصد لك العالم</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="live-pill"><div class="ld"></div>مباشر</div>
+      <div>
+        <div class="hdr-clock" id="clock">--:--:--</div>
+        <div class="hdr-date" id="dateDisplay"></div>
+      </div>
+    </div>
+  </div>
+  <div class="load-bar"><div class="load-fill" id="loadFill"></div></div>
+</header>
+
+<!-- BREAKING NOTIFICATION -->
+<div class="break-notif" id="breakNotif" onclick="dismissNotif()">
+  <div class="bn-close" onclick="dismissNotif(event)">&#x2715;</div>
+  <div class="bn-tag">خبر عاجل</div>
+  <div class="bn-title" id="bnTitle"></div>
+  <div class="bn-src" id="bnSrc"></div>
+</div>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero-wrap" id="heroWrap">
+    <div class="hero-main" id="heroMain">
+      <img class="hero-img" id="heroImg" src="" alt="" onerror="this.style.display='none'">
+      <div class="hero-grad"></div>
+      <div class="hero-body">
+        <div class="hero-badge"><div class="hb-dot"></div><span id="heroBadgeTxt">عاجل</span></div>
+        <div class="hero-title" id="heroTitle">جاري تحميل اخر الاخبار...</div>
+        <div class="hero-desc" id="heroDesc">يتم جلب احدث الاخبار من المصادر العالمية</div>
+        <div class="hero-footer">
+          <span class="hero-src" id="heroSrc">المدار نيوز</span>
+          <span id="heroTime">الان</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-side" id="heroSide"></div>
+  </div>
+
+  <!-- MAIN FEED -->
+  <div>
+    <div class="sec-hdr">
+      <div class="sec-title">اخر الاخبار <span class="sec-count" id="newsCount">0</span></div>
+      <button class="upd-btn" id="updBtn" onclick="loadNews()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        تحديث
+      </button>
+    </div>
+    <div id="newsGrid"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- ABOUT -->
+    <div class="wgt">
+      <div class="wgt-hdr"><div class="wgt-bar"></div><div class="wgt-title">عن المدار</div></div>
+      <div class="about-box">
+        <div class="about-logo">
+          <div class="ab" style="height:8px"></div><div class="ab" style="height:14px"></div>
+          <div class="ab" style="height:20px"></div><div class="ab" style="height:14px"></div>
+          <div class="ab" style="height:8px"></div>
+        </div>
+        <div class="about-name">المدار | News</div>
+        <div class="about-handle">@AlmadarNewss</div>
+        <div class="about-bio">المدار | نختصر الخبر.. لنرصد لك العالم. اخبار عاجلة ومتابعة مستمرة لاخر المستجدات المحلية والعالمية.</div>
+        <a href="https://twitter.com/AlmadarNewss" target="_blank" class="follow-btn">تابعنا على X</a>
+      </div>
+    </div>
+
+    <!-- LIVE FEED -->
+    <div class="wgt">
+      <div class="wgt-hdr">
+        <div class="wgt-bar"></div>
+        <div class="wgt-title">تغذية مباشرة</div>
+        <div style="margin-right:auto;display:flex;align-items:center;gap:5px;font-size:10px;color:var(--red3);font-weight:700">
+          <div class="ld" style="width:5px;height:5px;background:var(--red3)"></div>مباشر
+        </div>
+      </div>
+      <div class="wgt-body" style="padding:10px 14px">
+        <div class="live-feed-list" id="liveFeedList"></div>
+      </div>
+    </div>
+
+    <!-- ADD NEWS -->
+    <div class="wgt" style="overflow:visible">
+      <div class="add-hdr">نشر خبر جديد</div>
+      <div class="add-body">
+        <input class="ai" id="aiTitle" placeholder="عنوان الخبر...">
+        <input class="ai" id="aiDesc" placeholder="تفاصيل الخبر (اختياري)...">
+        <input class="ai" id="aiImg" placeholder="رابط صورة (اختياري)...">
+        <div class="ai-row">
+          <select class="ai-sel" id="aiSrc">
+            <option>المدار</option><option>الجزيرة</option>
+            <option>العربية</option><option>رويترز</option>
+          </select>
+          <button class="ai-sub" onclick="addManual()">نشر</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="wgt">
+      <div class="wgt-hdr"><div class="wgt-bar"></div><div class="wgt-title">احصائيات</div></div>
+      <div class="wgt-body">
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-n" id="st1">0</div><div class="stat-l">اخبار اليوم</div></div>
+          <div class="stat-box"><div class="stat-n" id="st2">0</div><div class="stat-l">خبر عاجل</div></div>
+          <div class="stat-box"><div class="stat-n" id="st3">10</div><div class="stat-l">مصدر نشط</div></div>
+          <div class="stat-box"><div class="stat-n" id="st4">0</div><div class="stat-l">تحديث اليوم</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRENDING -->
+    <div class="wgt">
+      <div class="wgt-hdr"><div class="wgt-bar"></div><div class="wgt-title">الاكثر تداولا</div></div>
+      <div class="wgt-body" id="trendBox"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-in">
+    <div class="foot-brand">المدار <b>|</b> News</div>
+    <a href="https://twitter.com/AlmadarNewss" target="_blank" class="foot-x">تابعنا على X — @AlmadarNewss</a>
+    <div class="foot-copy">2025 المدار نيوز · جميع الحقوق محفوظة</div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg" onclick="bgClose(event)">
+  <div class="modal-box">
+    <div class="modal-img-wrap" id="mImgWrap">
+      <img class="modal-img" id="mImg" src="" alt="" onerror="this.parentElement.style.display='none'">
+      <div class="modal-img-overlay"></div>
+    </div>
+    <div class="m-hdr">
+      <div style="flex:1">
+        <div class="m-badge"><div class="hb-dot"></div><span id="mBadge"></span></div>
+        <div class="m-title" id="mTitle"></div>
+      </div>
+      <button class="m-close" onclick="closeModal()">&#x2715;</button>
+    </div>
+    <div class="m-body">
+      <div class="m-meta">
+        <span class="m-src" id="mSrc"></span>
+        <span id="mTime"></span>
+      </div>
+      <div class="m-desc" id="mDesc"></div>
+      <a id="mLink" href="#" target="_blank" class="m-link">اقرا الخبر كاملا &larr;</a>
+      <div class="m-share">
+        <button class="m-share-btn" onclick="shareCard()">نسخ الرابط</button>
+        <button class="m-share-btn" onclick="shareX()">مشاركة على X</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── IMAGES ───────────────────────────────────────────────────────────────────
+const IMGS = {
+  // اخبار عاجلة — صور غرف اجتماعات طوارئ وصحفيين وشاشات اخبار
+  breaking:[
+    'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=900&q=75',
+    'https://images.unsplash.com/photo-1572953109213-3be62398eb95?w=900&q=75',
+    'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&q=75',
+    'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=900&q=75',
+  ],
+  // سياسة — مقار حكومية وقاعات اجتماعات ومؤتمرات
+  politics:[
+    'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=900&q=75',
+    'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=900&q=75',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=75',
+  ],
+  // اقتصاد — اسواق مال وبورصة وابراج تجارية
+  economy:[
+    'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&q=75',
+    'https://images.unsplash.com/photo-1611672585731-fa10603fb9e0?w=900&q=75',
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=75',
+  ],
+  // عالم — خريطة العالم وصور من الفضاء وعلم الامم المتحدة
+  world:[
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&q=75',
+    'https://images.unsplash.com/photo-1526470498-9ae73c665de8?w=900&q=75',
+    'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=900&q=75',
+  ],
+  // تقنية — حواسيب وشاشات وذكاء اصطناعي
+  tech:[
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=75',
+    'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=900&q=75',
+    'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=900&q=75',
+  ],
+  // رياضة — ملاعب كرة قدم وجماهير
+  sports:[
+    'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&q=75',
+    'https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?w=900&q=75',
+    'https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=900&q=75',
+  ],
+};
+const getImg = (cat, s=0) => (IMGS[cat]||IMGS.world)[s % (IMGS[cat]||IMGS.world).length];
+
+// ── NEWS DATA ─────────────────────────────────────────────────────────────────
+const BASE_NEWS = [
+  {id:'n1',src:'الجزيرة',cat:'breaking',title:'مجلس الامن يعقد جلسة طارئة لبحث التطورات الاقليمية',desc:'طلبت عدة دول اعضاء عقد اجتماع طارئ لمجلس الامن لمناقشة التصعيد المتسارع في المنطقة ومطالبة الاطراف بضبط النفس وفتح ممرات انسانية عاجلة.',link:'https://aljazeera.net',minsAgo:2},
+  {id:'n2',src:'Bloomberg',cat:'economy',title:'النفط يتجاوز 88 دولارا وسط مخاوف من اضطراب الامدادات',desc:'ارتفعت اسعار النفط الخام لاعلى مستوياتها منذ اسابيع مدفوعة بتراجع المخزونات الامريكية وتصاعد حدة التوترات الجيوسياسية في منطقتين رئيسيتين.',link:'https://bloomberg.com',minsAgo:9},
+  {id:'n3',src:'AP News',cat:'world',title:'زلزال بقوة 6.8 درجة يضرب سواحل المحيط الهادئ',desc:'ضرب زلزال عنيف بلغت قوته 6.8 درجة على مقياس ريختر سواحل المحيط الهادئ مما دفع السلطات لاصدار تحذيرات من امواج تسونامي في المناطق الساحلية.',link:'https://apnews.com',minsAgo:22},
+  {id:'n4',src:'العربية',cat:'politics',title:'قمة عربية في الرياض تناقش ملفات التكامل الاقتصادي',desc:'انطلقت اعمال القمة العربية بمشاركة قادة ورؤساء وفود من الدول الاعضاء لبحث اليات تعزيز التعاون الاقتصادي واطلاق مشاريع بنية تحتية مشتركة.',link:'https://alarabiya.net',minsAgo:38},
+  {id:'n5',src:'Reuters',cat:'economy',title:'الاحتياطي الفيدرالي يثبت الفائدة ويلمح لخفض محتمل',desc:'قرر مجلس الاحتياطي الفيدرالي الابقاء على اسعار الفائدة دون تغيير مع اشارات حذرة الى امكانية البدء بخفضها بحلول النصف الثاني من العام.',link:'https://reuters.com',minsAgo:55},
+  {id:'n6',src:'BBC',cat:'world',title:'مؤتمر المناخ يختتم بتعهدات تمويلية ضخمة للدول النامية',desc:'اختتم مؤتمر الاطراف للمناخ اعماله باعلان حزمة تمويلية ضخمة للدول النامية لمساعدتها على التحول نحو الطاقة النظيفة والتكيف مع التغيرات.',link:'https://bbc.com',minsAgo:72},
+  {id:'n7',src:'رويترز',cat:'tech',title:'شركات التقنية الكبرى تضخ 200 مليار دولار في الذكاء الاصطناعي',desc:'اعلنت كبرى شركات التقنية العالمية عن خطط استثمارية ضخمة في البنية التحتية للذكاء الاصطناعي خلال السنوات الثلاث المقبلة وسط منافسة محتدمة.',link:'https://reuters.com',minsAgo:88},
+  {id:'n8',src:'سكاي عربية',cat:'sports',title:'نتائج البطولة الاوروبية وابرز احداث الجولة الاخيرة',desc:'شهدت المباريات الاوروبية الكبرى حركة واسعة في نتائجها مع تسجيل اهداف مثيرة وتحولات درامية في جدول الترتيب العام للبطولة.',link:'https://skynewsarabia.com',minsAgo:105},
+];
+BASE_NEWS.forEach((n,i) => n.img = getImg(n.cat, i));
+
+// اخبار عاجلة تنزل تلقائياً بالتسلسل
+const AUTO_BREAKING = [
+  {src:'الجزيرة',cat:'breaking',title:'وزير الخارجية يتوجه الى نيويورك لعقد مباحثات عاجلة مع الامين العام للامم المتحدة',desc:'اعلن وزير الخارجية عن توجهه فور الان الى نيويورك حاملا رسائل عاجلة لعقد محادثات مع الامين العام للامم المتحدة في ظل التطورات المتسارعة.',link:'https://aljazeera.net'},
+  {src:'Reuters',cat:'breaking',title:'البنك المركزي الاوروبي يعلن خفضا مفاجئا في اسعار الفائدة',desc:'اصدر البنك المركزي الاوروبي قرارا مفاجئا بخفض اسعار الفائدة بمقدار ربع نقطة مئوية في اجتماع استثنائي طارئ عقده صباح اليوم.',link:'https://reuters.com'},
+  {src:'AP News',cat:'breaking',title:'تقارير عن اتفاق وقف اطلاق نار وشيك في منطقة النزاع',desc:'كشفت مصادر دبلوماسية متعددة عن قرب التوصل الى اتفاق لوقف اطلاق النار بعد جولة من المفاوضات المكثفة التي استمرت على مدار الساعة.',link:'https://apnews.com'},
+  {src:'Bloomberg',cat:'economy',title:'السوق الامريكية تشهد اكبر ارتفاع في تاريخها منذ عامين',desc:'سجلت مؤشرات وول ستريت ارتفاعا قياسيا تجاوز 4 بالمئة في جلسة واحدة مدفوعة ببيانات التضخم المتراجعة وتوقعات ايجابية للربع القادم.',link:'https://bloomberg.com'},
+  {src:'BBC',cat:'world',title:'انقطاع تام في الاتصالات يضرب عدة مدن كبرى',desc:'تعاني عدة مدن من انقطاع حاد في خدمات الانترنت والاتصالات الخلوية وتعمل الجهات المختصة على تحديد سبب الانقطاع واعادة الخدمة.',link:'https://bbc.com'},
+  {src:'العربية',cat:'breaking',title:'هبوط طائرة اضطراري في مطار دولي وجميع الركاب بخير',desc:'اضطرت طائرة ركاب قادمة من رحلة دولية الى الهبوط اضطراريا في المطار بسبب عطل فني وافادت السلطات بان جميع الركاب والطاقم بخير.',link:'https://alarabiya.net'},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let allNews = [];
+let updateCount = 0;
+let autoIdx = 0;
+let currentModal = null;
+let refreshCount = 0;
+
+const CAT = {breaking:'عاجل',politics:'سياسة',economy:'اقتصاد',world:'عالم',tech:'تقنية',sports:'رياضة'};
+
+const TREND = [
+  {t:'اسعار النفط',c:'28.3K',h:true},{t:'مجلس الامن',c:'21.7K',h:true},
+  {t:'الفيدرالي الامريكي',c:'14.2K',h:false},{t:'قمة الرياض',c:'11.9K',h:false},
+  {t:'ذكاء اصطناعي',c:'9.4K',h:false},
+];
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function init() {
+  startClock();
+  loadNews();
+  buildTrending();
+  // auto-add breaking news every 25 seconds
+  setInterval(addAutoBreaking, 25000);
+  // auto-refresh all news every 5 min
+  setInterval(()=>{ loadNews(true); }, 300000);
+}
+
+function startClock() {
+  const cl = document.getElementById('clock');
+  const dt = document.getElementById('dateDisplay');
+  const tick = () => {
+    const n = new Date();
+    cl.textContent = n.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    dt.textContent = n.toLocaleDateString('ar-SA',{weekday:'short',day:'numeric',month:'long'});
+  };
+  tick(); setInterval(tick, 1000);
+}
+
+// ── LOAD NEWS ─────────────────────────────────────────────────────────────────
+function loadNews(silent=false) {
+  const btn = document.getElementById('updBtn');
+  btn.classList.add('spin');
+  if(!silent) showSkel();
+  animLoad();
+  refreshCount++;
+  document.getElementById('st4').textContent = refreshCount;
+
+  setTimeout(()=>{
+    if(allNews.length === 0) allNews = BASE_NEWS.map(n=>({...n, isNew:false}));
+    btn.classList.remove('spin');
+    renderHero();
+    renderGrid();
+    renderLiveFeed();
+    updateStats();
+    updateTicker();
+    if(!silent) showToast('تم تحديث الاخبار');
+  }, 800);
+}
+
+// ── AUTO BREAKING ─────────────────────────────────────────────────────────────
+function addAutoBreaking() {
+  const raw = AUTO_BREAKING[autoIdx % AUTO_BREAKING.length];
+  autoIdx++;
+
+  const n = {
+    ...raw,
+    id: 'auto_' + Date.now(),
+    minsAgo: 0,
+    img: getImg(raw.cat, autoIdx),
+    isNew: true,
+  };
+
+  allNews.unshift(n);
+  updateCount++;
+
+  renderHero();
+  renderGrid();
+  renderLiveFeed();
+  updateStats();
+  updateTicker();
+  showBreakingNotif(n);
+  showToast('خبر عاجل جديد');
+
+  // mark as not-new after 60s
+  setTimeout(()=>{
+    const found = allNews.find(x=>x.id===n.id);
+    if(found) found.isNew = false;
+    renderGrid();
+  }, 60000);
+}
+
+// ── BREAKING NOTIF ────────────────────────────────────────────────────────────
+function showBreakingNotif(n) {
+  document.getElementById('bnTitle').textContent = n.title;
+  document.getElementById('bnSrc').textContent = n.src + ' · الان';
+  const el = document.getElementById('breakNotif');
+  el.classList.add('show');
+  el.onclick = ()=>{ openModal(allNews.indexOf(n)); dismissNotif(); };
+  setTimeout(dismissNotif, 7000);
+}
+
+function dismissNotif(e) {
+  if(e) e.stopPropagation();
+  document.getElementById('breakNotif').classList.remove('show');
+}
+
+// ── TICKER ────────────────────────────────────────────────────────────────────
+function updateTicker() {
+  const items = allNews.slice(0,12).map(n=>`${n.src}: ${n.title}`);
+  const all = [...items,...items];
+  document.getElementById('tickerTrack').innerHTML = all.map(t=>`<span class="ti">${t}</span>`).join('');
+}
+
+// ── HERO ──────────────────────────────────────────────────────────────────────
+function renderHero() {
+  const top = allNews[0];
+  const rest = allNews.slice(1,4);
+  document.getElementById('heroImg').src = top.img;
+  document.getElementById('heroBadgeTxt').textContent = CAT[top.cat]||top.cat;
+  document.getElementById('heroTitle').textContent = top.title;
+  document.getElementById('heroDesc').textContent = top.desc;
+  document.getElementById('heroSrc').textContent = top.src;
+  document.getElementById('heroTime').textContent = timeStr(top.minsAgo);
+  document.getElementById('heroMain').onclick = ()=>openModal(0);
+
+  document.getElementById('heroSide').innerHTML = rest.map((n,i)=>{
+    const idx = allNews.indexOf(n);
+    return `<div class="hsc" onclick="openModal(${idx})">
+      <img class="hsc-img" src="${n.img}" alt="" onerror="this.style.display='none'">
+      <div class="hsc-grad"></div>
+      <div class="hsc-body">
+        ${n.isNew?'<span class="new-badge">جديد</span>':''}
+        <div class="hsc-badge">${CAT[n.cat]||n.cat}</div>
+        <div class="hsc-title">${n.title}</div>
+        <div class="hsc-meta">${n.src} · ${timeStr(n.minsAgo)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── GRID ──────────────────────────────────────────────────────────────────────
+function renderGrid() {
+  const items = allNews.slice(0,12);
+  document.getElementById('newsCount').textContent = allNews.length;
+  document.getElementById('newsGrid').innerHTML = `
+    <div class="ngrid">${items.map((n,i)=>buildCard(n,i)).join('')}</div>`;
+}
+
+function buildCard(n, i) {
+  const idx = allNews.indexOf(n);
+  const d = Math.min(i*45,500);
+  const isNewClass = n.isNew ? ' is-new' : '';
+  return `
+  <div class="ncard${isNewClass}" style="animation-delay:${d}ms" onclick="openModal(${idx})">
+    <div class="ncard-thumb">
+      <img class="ncard-img" src="${n.img}" alt=""
+        onerror="this.parentElement.innerHTML='<div class=ncard-ph><span>${n.src}</span></div>'">
+      <div class="cat-tag${n.isNew?' new-tag':''}">${n.isNew?'جديد':CAT[n.cat]||n.cat}</div>
+    </div>
+    <div class="ncard-body">
+      <div class="ncard-meta">
+        <span class="ncard-src">${n.src}</span>
+        <span class="ncard-time">${timeStr(n.minsAgo)}</span>
+      </div>
+      <div class="ncard-title">${n.title}</div>
+      <div class="ncard-desc">${n.desc.slice(0,95)}...</div>
+    </div>
+    <div class="ncard-foot">
+      <span class="ncard-cat">${CAT[n.cat]||n.cat}</span>
+      <span class="read-more">اقرا المزيد &larr;</span>
+    </div>
+  </div>`;
+}
+
+function showSkel() {
+  document.getElementById('newsGrid').innerHTML = `
+    <div class="ngrid">${Array(8).fill(0).map((_,i)=>`
+      <div class="ncard" style="animation-delay:${i*50}ms">
+        <div class="sk" style="height:185px;border-radius:0"></div>
+        <div class="ncard-body">
+          <div class="sk" style="height:11px;width:38%;margin-bottom:10px"></div>
+          <div class="sk" style="height:15px;width:92%;margin-bottom:6px"></div>
+          <div class="sk" style="height:15px;width:75%;margin-bottom:6px"></div>
+          <div class="sk" style="height:12px;width:55%"></div>
+        </div>
+      </div>`).join('')}</div>`;
+}
+
+// ── LIVE FEED ─────────────────────────────────────────────────────────────────
+function renderLiveFeed() {
+  document.getElementById('liveFeedList').innerHTML = allNews.slice(0,15).map((n,i)=>{
+    const idx = allNews.indexOf(n);
+    return `<div class="lf-item${n.isNew?' is-new':''}" onclick="openModal(${idx})">
+      <div class="lf-dot${n.isNew?' hot':''}"></div>
+      <div class="lf-body">
+        <div class="lf-title">${n.title}</div>
+        <div class="lf-meta">${n.src} · ${timeStr(n.minsAgo)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── TRENDING ──────────────────────────────────────────────────────────────────
+function buildTrending() {
+  document.getElementById('trendBox').innerHTML = TREND.map((t,i)=>`
+    <div class="tr-item">
+      <div class="tr-num${t.h?' h':''}">${i+1}</div>
+      <div class="tr-text">${t.t}</div>
+      <div class="tr-count">${t.c}</div>
+    </div>`).join('');
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('st1').textContent = allNews.length;
+  document.getElementById('st2').textContent = allNews.filter(n=>n.cat==='breaking').length;
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────────
+function openModal(idx) {
+  const n = allNews[idx]; if(!n) return;
+  currentModal = n;
+  const iw = document.getElementById('mImgWrap');
+  document.getElementById('mImg').src = n.img||'';
+  iw.style.display = n.img ? 'block' : 'none';
+  document.getElementById('mBadge').textContent = CAT[n.cat]||n.cat;
+  document.getElementById('mTitle').textContent = n.title;
+  document.getElementById('mSrc').textContent = n.src;
+  document.getElementById('mTime').textContent = timeStr(n.minsAgo);
+  document.getElementById('mDesc').textContent = n.desc;
+  document.getElementById('mLink').href = n.link||'#';
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function bgClose(e) { if(e.target===document.getElementById('modalBg')) closeModal(); }
+
+function shareCard() {
+  if(currentModal){
+    navigator.clipboard.writeText(currentModal.link||window.location.href);
+    showToast('تم نسخ الرابط');
+  }
+}
+
+function shareX() {
+  if(currentModal){
+    const txt = encodeURIComponent(currentModal.title + ' — المدار نيوز\n' + (currentModal.link||''));
+    window.open('https://twitter.com/intent/tweet?text='+txt,'_blank');
+  }
+}
+
+// ── ADD MANUAL ────────────────────────────────────────────────────────────────
+function addManual() {
+  const title = document.getElementById('aiTitle').value.trim();
+  const desc  = document.getElementById('aiDesc').value.trim();
+  const img   = document.getElementById('aiImg').value.trim();
+  const src   = document.getElementById('aiSrc').value;
+  if(!title){ showToast('ادخل عنوان الخبر',true); return; }
+  const n = {
+    id:'m_'+Date.now(), src, cat:'breaking',
+    title, desc:desc||title, link:'#',
+    img:img||getImg('breaking',Date.now()%3),
+    minsAgo:0, isNew:true,
+  };
+  allNews.unshift(n);
+  renderHero(); renderGrid(); renderLiveFeed(); updateStats(); updateTicker();
+  showBreakingNotif(n);
+  document.getElementById('aiTitle').value='';
+  document.getElementById('aiDesc').value='';
+  document.getElementById('aiImg').value='';
+  showToast('تم نشر الخبر');
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function timeStr(m) {
+  if(m===0) return 'الان';
+  if(m<60) return m+' دقيقة';
+  if(m<1440) return Math.floor(m/60)+' ساعة';
+  return Math.floor(m/1440)+' يوم';
+}
+
+function animLoad() {
+  const f = document.getElementById('loadFill');
+  f.style.width='0%';
+  setTimeout(()=>f.style.width='65%',80);
+  setTimeout(()=>f.style.width='100%',750);
+  setTimeout(()=>f.style.width='0%',1200);
+}
+
+function showToast(msg, err=false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast${err?' err':''} show`;
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
